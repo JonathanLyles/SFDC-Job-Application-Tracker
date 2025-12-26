@@ -1,61 +1,131 @@
 # Salesforce Job Application Tracker
 
-This repository contains a **Salesforce-native Job Application Tracker**, designed to help users search and track job postings across multiple job boards (e.g., Jooble, Indeed, LinkedIn). The application is built using modern Salesforce best practices, including **Queueable Apex, Strategy Patterns, Domain-Driven Design, and Platform Events**.
+This repository contains a **Salesforce-native Job Application Tracker**, designed to help users search and track job postings across multiple job boards (e.g., Jooble, Indeed, LinkedIn). The application is built using modern Salesforce best practices, including **Queueable Apex, Strategy Patterns, Domain-Driven Design, Platform Events, and robust trigger handling**.
 
 ## Key Features
 
-- **Multi-Board Job Search:** Query multiple external APIs in parallel using a composite strategy with fan-out/fan-in orchestration.  
-- **Async Execution:** Queueable Apex ensures scalable, governor-limit-safe callouts while providing incremental updates to the UI.  
-- **Normalized Domain Model:** External API responses are normalized into consistent domain objects (`JobPosting`) for downstream processing and persistence.  
-- **Robust Logging:** Integrated **Nebula Logger** provides consistent, correlated logs across controllers, services, queueables, strategies, and triggers.  
-- **Trigger-Driven Task Creation:** Uses the Kevin O’Hara trigger framework to create follow-up Tasks based on the status of persisted `Job_Application__c` records.  
-- **Extensible Architecture:** Adding new job boards is straightforward — implement a strategy, register it, and the system handles orchestration, logging, and event notifications automatically.  
+* **Multi-Board Job Search:** Query multiple external APIs in parallel using a composite strategy with fan-out/fan-in orchestration.
+* **Async Execution:** Queueable Apex ensures scalable, governor-limit-safe callouts while providing incremental updates to the UI.
+* **Normalized Domain Model:** External API responses are normalized into consistent domain objects (`JobPosting`) for downstream processing and persistence.
+* **Robust Logging:** Integrated **Nebula Logger** provides consistent, correlated logs across controllers, services, queueables, strategies, and triggers.
+* **Trigger-Driven Task Creation:** Uses the Kevin O’Hara trigger framework to create follow-up Tasks based on the status of persisted `Job_Application__c` records.
+* **Extensible Architecture:** Adding new job boards is straightforward — implement a strategy, register it, and the system handles orchestration, logging, and event notifications automatically.
 
 ## Purpose
 
 This project demonstrates a **scalable and maintainable architecture** for integrating Salesforce with multiple external APIs, handling asynchronous processing, and providing real-time UI updates. It follows **Hexagonal / Clean Architecture principles**, separating concerns across the UI, application services, strategies, queueables, and triggers, while ensuring observability, robustness, and ease of testing.
 
+## Setup Instructions
+
+### Prerequisites
+
+Before deploying the application, ensure you have:
+
+1. A Salesforce org (sandbox, scratch, or production) with **API version 58.0+**.
+2. Admin access to install unmanaged packages and deploy Apex/metadata.
+3. Installed dependencies (see below).
+
+### Step 1 — Install Dependencies
+
+#### 1.1 Nebula Logger
+
+1. Open this link in your browser while logged into your org:
+   [Install Nebula Logger](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tXXXXXXXXXXXX)
+2. Follow the prompts to install the unmanaged package.
+3. Grant access to all users.
+
+#### 1.2 Kevin O’Hara Trigger Framework
+
+1. Open the framework install link in your browser:
+   [Install Trigger Framework](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tYYYYYYYYYYYY)
+2. Follow the prompts to install the unmanaged package.
+3. Grant access to all users.
+
+> ⚠️ **Important:** Install **Nebula Logger first**, then the Trigger Framework, before deploying the Job Application Tracker code.
+
+### Step 2 — Deploy Job Application Tracker
+
+#### Option A — Deploy via Salesforce CLI
+
+```bash
+# Clone the repo
+git clone https://github.com/<username>/job-application-tracker.git
+cd job-application-tracker
+
+# Authorize your target org
+sfdx auth:web:login -a MyOrgAlias
+
+# Deploy all metadata
+sfdx force:source:deploy -p force-app/ -u MyOrgAlias
+```
+
+#### Option B — Deploy via Change Set or Metadata API
+
+1. Use **VS Code + Salesforce Extension Pack** to deploy the `force-app/` folder.
+2. Deploy **all Apex classes, triggers, platform events, and LWC components**.
+3. Verify that `Job_Application__c` and `JobSearchCompleted__e` are deployed.
+
+### Step 3 — Verify Setup
+
+1. Check that all **Apex classes** and **triggers** are active.
+2. Confirm that **Nebula Logger** custom objects exist in Setup.
+3. Confirm that **JobApplicationTrigger** is active.
+4. Optionally, open the LWC in App Builder and verify it renders correctly.
+
+### Step 4 — Run a Test Search
+
+1. Navigate to the **Job Search LWC** in the App.
+2. Enter search criteria: keywords, location, and select job boards.
+3. Click **Search**.
+4. Observe results appear incrementally via Platform Events.
+5. Check debug logs in **Nebula Logger** to confirm logging and progress events.
+
 ## Requirements
-This application had the following requirements:
+
+This application was built according to the following requirements:
 
 ### Multiple External APIs
-- Support integration with different job boards (e.g., Jooble, Indeed)  
-- Abstract API-specific request/response formats via **API wrappers**  
-- Normalize results into a common **domain wrapper** (`JobPosting`) for consistent downstream processing  
+
+* Support integration with different job boards (e.g., Jooble, Indeed)
+* Abstract API-specific request/response formats via **API wrappers**
+* Normalize results into a common **domain wrapper** (`JobPosting`) for consistent downstream processing
 
 ### Async Execution & Scalability
-- Use **Queueable Apex** for callouts and orchestration  
-- Support **fan-out/fan-in** patterns for composite searches across multiple boards  
-- Ensure **bulk-safe persistence** to `Job_Application__c` and reactive triggers for task creation  
+
+* Use **Queueable Apex** for callouts and orchestration
+* Support **fan-out/fan-in** patterns for composite searches across multiple boards
+* Ensure **bulk-safe persistence** to `Job_Application__c` and reactive triggers for task creation
 
 ### Single and Composite Strategies
-- Dynamically choose strategy based on user-selected boards  
-- Use **strategy registry** to resolve board-specific logic  
-- Composite searches allow parallel processing of multiple boards with progress tracking  
+
+* Dynamically choose strategy based on user-selected boards
+* Use **strategy registry** to resolve board-specific logic
+* Composite searches allow parallel processing of multiple boards with progress tracking
 
 ### Comprehensive Logging
-- Integrate **Nebula Logger** throughout layers: controllers, services, queueables, strategies, triggers  
-- Track workflow, retries, progress, errors, and events with **searchId correlation**  
-- Ensure all log entries across layers include **searchId** (and queueable ID if applicable) for consistent correlation and traceability  
-- Enable observability for troubleshooting, audit, and monitoring  
+
+* Integrate **Nebula Logger** throughout layers: controllers, services, queueables, strategies, triggers
+* Track workflow, retries, progress, errors, and events with **searchId correlation**
+* Ensure all log entries across layers include **searchId** (and queueable ID if applicable) for consistent correlation and traceability
+* Enable observability for troubleshooting, audit, and monitoring
 
 ### Robust Trigger Handling
-- Use **Kevin O’Hara trigger framework** for `Job_Application__c`  
-- Handle post-persistence logic (e.g., task creation) in a **bulk-safe, idempotent manner**  
-- Ensure triggers **react to changes**, not orchestrate external calls  
+
+* Use **Kevin O’Hara trigger framework** for `Job_Application__c`
+* Handle post-persistence logic (e.g., task creation) in a **bulk-safe, idempotent manner**
+* Ensure triggers **react to changes**, not orchestrate external calls
 
 ### Domain-Driven Design
-- Use **domain wrappers** (`JobPosting`, `JobSearchCriteria`) to normalize external data  
-- Decouple downstream logic (queueables, triggers, UI) from API-specific formats  
-- Encapsulate business rules and invariants in domain objects  
+
+* Use **domain wrappers** (`JobPosting`, `JobSearchCriteria`) to normalize external data
+* Decouple downstream logic (queueables, triggers, UI) from API-specific formats
+* Encapsulate business rules and invariants in domain objects
 
 ### Future Growth & Extensibility
-- New job boards can be added by implementing a strategy and registering it in the registry  
-- Architecture supports **scalable orchestration**, additional logging, retries, and new event types  
-- Modular design allows for **separation of concerns**, maintainability, and easier testing
 
-
-
+* New job boards can be added by implementing a strategy and registering it in the registry
+* Architecture supports **scalable orchestration**, additional logging, retries, and new event types
+* Modular design allows for **separation of concerns**, maintainability, and easier testing
 
 ## Requirements Mapping
 
