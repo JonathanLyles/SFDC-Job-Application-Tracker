@@ -15,11 +15,8 @@ This repository contains a **Salesforce-native Job Application Tracker**, design
 
 This project demonstrates a **scalable and maintainable architecture** for integrating Salesforce with multiple external APIs, handling asynchronous processing, and providing real-time UI updates. It follows **Hexagonal / Clean Architecture principles**, separating concerns across the UI, application services, strategies, queueables, and triggers, while ensuring observability, robustness, and ease of testing.
 
----
-
-
-
 ## Requirements
+This application had the following requirements:
 
 ### Multiple External APIs
 - Support integration with different job boards (e.g., Jooble, Indeed)  
@@ -68,7 +65,7 @@ This project demonstrates a **scalable and maintainable architecture** for integ
 | Async Execution & Scalability | **Queueables** (JobSearchOrchestratorQueueable, SingleBoardSearchQueueable, CompositeBoardSearchQueueable) | Supports **fan-out/fan-in**, bulk-safe persistence, and retry mechanisms |
 | Single and Composite Strategies | **Strategy layer & JobBoardStrategyRegistry** | Registry dynamically resolves appropriate strategy(s); composite strategy handles multiple boards in parallel |
 | Comprehensive Logging | **All layers** (Controller, Service, Queueables, Strategies, Triggers) | Uses **Nebula Logger** with searchId correlation; logs workflow, retries, progress, errors, and events |
-| Robust Trigger Handling | **Trigger & TriggerHandler** (JobApplicationTrigger + JobApplicationTriggerHandler + JobApplicationTaskHelper) | Bulk-safe, idempotent task creation; triggers react to persistence, not orchestrate integrations |
+| Robust Trigger Handling | **Trigger & TriggerHandler** (JobApplicationTrigger + JobApplicationTriggerHandler + JobApplicationTaskHelper) | Uses **Kevin O’Hara Trigger Framework** for bulk-safe, idempotent task creation; triggers react to persisted Job_Application__c records, do not orchestrate external integrations |
 | Domain-Driven Design | **Domain layer** (JobPosting, JobSearchCriteria) | Encapsulates business rules, enforces invariants, normalizes external API/input data; acts as a **wrapper** for internal consumption |
 | Future Growth & Extensibility | **Architecture-wide** | Adding new boards requires implementing a strategy + registering it; modular layers enable maintainability, testing, and scaling |
 
@@ -79,7 +76,7 @@ LWC UI
     - Collect criteria
     - Trigger search
     - Subscribe to platform events
- ↓
+     ↓
 JobSearchController (UI Facade)
     - Validate input
     - Logger.info(valid input submitted)
@@ -89,12 +86,12 @@ JobSearchController (UI Facade)
     - Start JobSearchService
     - Logger.info(search initiated)
     
- ↓
+     ↓
 JobSearchService (Sync boundary)
     - Decide: SINGLE or COMPOSITE
     - Logger.info(routing decision)
     - Enqueue JobSearchOrchestratorQueueable
- ↓
+     ↓
 JobSearchOrchestratorQueueable
     - Logger.info(orchestration start)
     - If SINGLE:
