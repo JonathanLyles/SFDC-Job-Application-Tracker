@@ -1,6 +1,15 @@
-const { jestConfig } = require('@salesforce/sfdx-lwc-jest/config');
+const { jestConfig } = require("@salesforce/sfdx-lwc-jest/config");
 
 module.exports = {
-    ...jestConfig,
-    modulePathIgnorePatterns: ['<rootDir>/.localdevserver']
+  ...jestConfig,
+
+  // ✅ keep your existing setting
+  modulePathIgnorePatterns: ["<rootDir>/.localdevserver"],
+
+  // ✅ ADD these for coverage
+  collectCoverage: true,
+  collectCoverageFrom: [
+    "force-app/main/default/lwc/**/*.js",
+    "!**/__tests__/**"
+  ]
 };

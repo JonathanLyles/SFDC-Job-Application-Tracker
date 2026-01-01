@@ -1,0 +1,202 @@
+<template>
+  <lightning-card title="Job Search">
+    <div class="slds-p-around_medium">
+      <lightning-input
+        label="Keywords"
+        value={keywords}
+        onchange={handleKeywordsChange}
+        placeholder="Enter keywords..."
+      >
+      </lightning-input>
+
+      <lightning-input
+        label="Location"
+        value={location}
+        onchange={handleLocationChange}
+        placeholder="Enter location..."
+      >
+      </lightning-input>
+
+      <lightning-dual-listbox
+        label="Work Type"
+        source-label="Available Options"
+        selected-label="Selected"
+        options={workTypeOptions}
+        value={selectedWorkTypes}
+        onchange={handleWorkTypeChange}
+        class="slds-m-vertical_medium"
+      >
+      </lightning-dual-listbox>
+
+      <lightning-button
+        label="Search Jobs"
+        variant="brand"
+        class="slds-m-top_medium slds-m-bottom_medium"
+        onclick={handleSearch}
+        disabled={isLoading}
+      >
+      </lightning-button>
+    </div>
+
+    <!-- Column Filters -->
+    <template if:true={hasSearchResults}>
+      <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+        <div class="slds-grid slds-wrap slds-gutters">
+          <div class="slds-col slds-size_1-of-6">
+            <lightning-input
+              label="Filter Title"
+              value={titleFilter}
+              onchange={handleTitleFilterChange}
+              placeholder="Filter by title..."
+            >
+            </lightning-input>
+          </div>
+          <div class="slds-col slds-size_1-of-6">
+            <lightning-input
+              label="Filter Salary"
+              value={salaryFilter}
+              onchange={handleSalaryFilterChange}
+              placeholder="Filter by salary..."
+            >
+            </lightning-input>
+          </div>
+          <div class="slds-col slds-size_1-of-6">
+            <lightning-input
+              label="Filter Company"
+              value={companyFilter}
+              onchange={handleCompanyFilterChange}
+              placeholder="Filter by company..."
+            >
+            </lightning-input>
+          </div>
+          <div class="slds-col slds-size_1-of-6">
+            <lightning-input
+              label="Filter Location"
+              value={locationFilter}
+              onchange={handleLocationFilterChange}
+              placeholder="Filter by location..."
+            >
+            </lightning-input>
+          </div>
+          <div class="slds-col slds-size_1-of-6">
+            <lightning-combobox
+              label="Filter Type"
+              value={typeFilter}
+              placeholder="Filter by type..."
+              options={typeFilterOptions}
+              onchange={handleTypeFilterChange}
+            >
+            </lightning-combobox>
+          </div>
+          <div class="slds-col slds-size_1-of-6">
+            <lightning-input
+              label="Filter Source"
+              value={sourceFilter}
+              onchange={handleSourceFilterChange}
+              placeholder="Filter by source..."
+            >
+            </lightning-input>
+          </div>
+        </div>
+        <div class="slds-m-top_small">
+          <lightning-button
+            label="Clear Filters"
+            onclick={handleClearFilters}
+            variant="neutral"
+            size="small"
+          >
+          </lightning-button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Loading State -->
+    <template if:true={isLoading}>
+      <div class="slds-align_absolute-center slds-p-vertical_large">
+        <lightning-spinner alternative-text="Searching jobs" size="medium">
+        </lightning-spinner>
+        <p class="slds-m-top_small">
+          Searching for jobs… this may take a moment.
+        </p>
+      </div>
+    </template>
+
+    <!-- Results -->
+    <template if:true={hasResults}>
+      <div class="slds-p-around_medium">
+        <lightning-datatable
+          key-field="id"
+          data={pagedJobs}
+          columns={columns}
+          onsort={handleSort}
+          sorted-by={sortedBy}
+          sorted-direction={sortedDirection}
+        >
+        </lightning-datatable>
+
+        <!-- Pagination -->
+        <div class="slds-m-top_medium slds-align_absolute-center">
+          <template if:true={showFirstButton}>
+            <lightning-button
+              label="First"
+              onclick={handleFirst}
+              class="slds-m-right_small"
+            >
+            </lightning-button>
+          </template>
+
+          <lightning-button
+            label="Previous"
+            onclick={handlePrevious}
+            disabled={isFirstPage}
+          >
+          </lightning-button>
+
+          <span class="slds-m-horizontal_medium">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <lightning-button
+            label="Next"
+            onclick={handleNext}
+            disabled={isLastPage}
+          >
+          </lightning-button>
+
+          <template if:true={showLastButton}>
+            <lightning-button
+              label="Last"
+              onclick={handleLast}
+              class="slds-m-left_small"
+            >
+            </lightning-button>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    <!-- No filtered results message -->
+    <template if:true={noFilteredResults}>
+      <div class="slds-align_absolute-center slds-p-vertical_large">
+        <p class="slds-text-align_center">
+          No jobs match the current filters. Try adjusting your filters or click
+          "Clear Filters" to see all results.
+        </p>
+      </div>
+    </template>
+
+    <!-- Empty State -->
+    <template if:true={isEmpty}>
+      <div class="slds-align_absolute-center slds-p-vertical_large">
+        <p class="slds-text-align_center">No jobs found for your search.</p>
+      </div>
+    </template>
+
+    <!-- Error State -->
+    <template if:true={hasError}>
+      <div class="slds-text-color_error slds-p-around_medium">
+        {errorMessage}
+      </div>
+    </template>
+  </lightning-card>
+</template>
