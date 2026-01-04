@@ -28,6 +28,37 @@
       >
       </lightning-dual-listbox>
 
+      <lightning-dual-listbox
+        label="Job Boards"
+        source-label="Available Job Boards"
+        selected-label="Selected Job Boards"
+        options={jobBoardOptions}
+        value={selectedJobBoards}
+        onchange={handleJobBoardChange}
+        class="slds-m-vertical_medium"
+      >
+      </lightning-dual-listbox>
+
+      <div class="slds-grid slds-gutters slds-m-bottom_medium">
+        <div class="slds-col">
+          <lightning-button
+            label="Select All Job Boards"
+            variant="neutral"
+            onclick={handleSelectAllJobBoards}
+            disabled={isLoading}
+            class="slds-m-right_x-small"
+          >
+          </lightning-button>
+          <lightning-button
+            label="Clear Job Boards"
+            variant="neutral"
+            onclick={handleClearJobBoards}
+            disabled={isLoading}
+          >
+          </lightning-button>
+        </div>
+      </div>
+
       <lightning-button
         label="Search Jobs"
         variant="brand"

@@ -1,5 +1,6 @@
 import { LightningElement } from "lwc";
 import searchJobs from "@salesforce/apex/JobSearchController.searchJobs";
+import getAvailableJobBoards from "@salesforce/apex/JobSearchController.getAvailableJobBoards";
 
 const PAGE_SIZE = 10;
 
@@ -8,6 +9,7 @@ export default class JobSearch extends LightningElement {
   keywords = "";
   location = "";
   selectedWorkTypes = [];
+  selectedJobBoards = [];
 
   // Work type options
   workTypeOptions = [
@@ -15,6 +17,9 @@ export default class JobSearch extends LightningElement {
     { label: "Onsite", value: "onsite" },
     { label: "Hybrid", value: "hybrid" }
   ];
+
+  // Job board options - loaded from custom metadata
+  jobBoardOptions = [];
 
   // UI state
   isLoading = false;
@@ -113,6 +118,33 @@ export default class JobSearch extends LightningElement {
   }
 
   /* ------------------
+   * Lifecycle hooks
+   * ------------------ */
+
+  async connectedCallback() {
+    try {
+      // Load available job boards from custom metadata
+      const boards = await getAvailableJobBoards();
+      this.jobBoardOptions = boards.map(board => ({
+        label: board.label,
+        value: board.value,
+        description: board.description
+      }));
+      
+      // Default to all job boards selected
+      this.selectedJobBoards = this.jobBoardOptions.map(board => board.value);
+    } catch (error) {
+      console.error('Failed to load job boards:', error);
+      // Set fallback job boards
+      this.jobBoardOptions = [
+        { label: 'Jooble', value: 'jooble', description: 'International job search engine' },
+        { label: 'Indeed', value: 'indeed', description: 'Popular job search platform' }
+      ];
+      this.selectedJobBoards = ['jooble', 'indeed'];
+    }
+  }
+
+  /* ------------------
    * Event handlers
    * ------------------ */
 
@@ -128,6 +160,18 @@ export default class JobSearch extends LightningElement {
     this.selectedWorkTypes = event.detail.value;
   }
 
+  handleJobBoardChange(event) {
+    this.selectedJobBoards = event.detail.value;
+  }
+
+  handleSelectAllJobBoards() {
+    this.selectedJobBoards = this.jobBoardOptions.map(board => board.value);
+  }
+
+  handleClearJobBoards() {
+    this.selectedJobBoards = [];
+  }
+
   async handleSearch() {
     this.resetState();
     this.isLoading = true;
@@ -137,7 +181,8 @@ export default class JobSearch extends LightningElement {
       const result = await searchJobs({
         keywords: this.keywords,
         location: this.location,
-        workTypes: this.selectedWorkTypes
+        workTypes: this.selectedWorkTypes,
+        selectedBoards: this.selectedJobBoards
       });
 
       this.originalJobs = result || [];

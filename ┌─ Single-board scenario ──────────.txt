@@ -1,0 +1,18 @@
+┌─ Single-board scenario ──────────────────────┐
+     |----------------------------------------------|
+     │ Enqueue SingleBoardSearchQueueable          │
+     │   - Resolve strategy                         │
+     │   - Build & execute HTTP callout            │
+     │   - Parse response                           │
+     │   - Persist results                          │
+     │   - Publish progress event                   │
+     │   - Retry if needed                          │
+     └─────────────────────────────────────────────┘
+     
+     ┌─ Composite (multi-board) scenario ─────────┐
+     │ Enqueue CompositeBoardSearchQueueable       │
+     │   - Fan-out: enqueue one SingleBoardSearchQueueable per board │
+     │   - Each SingleBoardSearchQueueable executes callout, parses response, persists results, publishes progress event, applies retry if needed │
+     │ Fan-in: after all boards finish, aggregate final state │
+     │ Publish completion event                     │
+     └─────────────────────────────────────────────┘

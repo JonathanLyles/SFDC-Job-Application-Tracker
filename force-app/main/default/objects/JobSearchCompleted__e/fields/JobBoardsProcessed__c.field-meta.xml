@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JobBoardsProcessed__c</fullName>
+    <description
+  >Comma-separated list of job boards that were processed in this search</description>
+    <label>Job Boards Processed</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+</CustomField>

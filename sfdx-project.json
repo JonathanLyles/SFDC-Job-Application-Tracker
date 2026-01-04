@@ -2,7 +2,17 @@
   "packageDirectories": [
     {
       "path": "force-app",
-      "default": true
+      "default": true,
+      "dependencies": [
+        {
+          "package": "NebulaLogger",
+          "versionNumber": "4.14.15.LATEST"
+        },
+        {
+          "package": "TriggerHandler",
+          "versionNumber": "2.0.0.LATEST"
+        }
+      ]
     }
   ],
   "name": "Job Application Tracker Application",
