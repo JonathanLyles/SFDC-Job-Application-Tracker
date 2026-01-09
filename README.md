@@ -434,8 +434,8 @@ JobSearchTrackingService (Fan-in)
 ## Event Behavior by Scenario
 
 | Scenario                           | Events Emitted                                                    | Notes                                                                                                           |
-| ---------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Single-board search**            | **Progress event only** (incremental)                             | **Progress event** (required) + **Completion event** (optional but recommended)                                 | For a single board, the progress event is sufficient to indicate completion, but emitting a completion event provides consistency with the composite scenario and simplifies LWC handling. |
+| ---------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Single-board search**            | **Progress event only** (incremental)                             | **Progress event** (required) + **Completion event** (optional but recommended). For a single board, the progress event is sufficient to indicate completion, but emitting a completion event provides consistency with the composite scenario and simplifies LWC handling. |
 | **Composite (multi-board) search** | **Progress events** per board + **Completion event** after fan-in | Fan-out creates multiple child queueables, so completion event is necessary to signal that all boards are done. |
 
 ## Separation of Concerns
