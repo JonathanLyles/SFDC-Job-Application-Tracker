@@ -29,29 +29,15 @@ Before deploying the application, ensure you have:
 
 ### Step 1 — Install Dependencies
 
-#### 1.1 Nebula Logger
+#### 1.1 Nebula Logger (Unlocked Package)
 
 For complete installation instructions, visit the official Nebula Logger repository:
-**[Nebula Logger Installation Guide](https://github.com/jongpie/NebulaLogger#getting-started)**
+**[Nebula Logger](https://github.com/jongpie/NebulaLogger)**
 
-The repository provides up-to-date installation options including:
-
-- Salesforce CLI installation
-- Browser-based installation
-- AppExchange installation
-- Configuration guidance
-
-#### 1.2 Kevin O’Hara Trigger Framework
+#### 1.2 SFDC Trigger Framework by Kevin O'Hara
 
 For complete installation instructions, visit the official SFDC Trigger Framework repository:
-**[SFDC Trigger Framework Installation Guide](https://github.com/kevinohara80/sfdc-trigger-framework#installation)**
-
-The repository provides up-to-date installation options including:
-
-- Salesforce CLI installation
-- Browser-based installation
-- Direct deployment from source
-- Configuration guidance
+**[SFDC Trigger Framework](https://github.com/kevinohara80/sfdc-trigger-framework)**
 
 > ⚠️ **Important:** Install **Nebula Logger first**, then the Trigger Framework, before deploying the Job Application Tracker code.
 
@@ -86,12 +72,12 @@ After installing Nebula Logger, update your `sfdx-project.json` to declare the d
 
 ### Step 2 — Deploy Job Application Tracker
 
-#### Option A — Deploy via Salesforce CLI
+#### Deploy via Salesforce CLI
 
 ```bash
 # Clone the repo
-git clone https://github.com/<username>/job-application-tracker.git
-cd job-application-tracker
+git clone https://github.com/JonathanLyles/Job-Application-Tracker-Application.git
+cd Job-Application-Tracker-Application
 
 # Authorize your target org
 sfdx auth:web:login -a MyOrgAlias
@@ -99,12 +85,6 @@ sfdx auth:web:login -a MyOrgAlias
 # Deploy all metadata
 sfdx force:source:deploy -p force-app/ -u MyOrgAlias
 ```
-
-#### Option B — Deploy via Change Set or Metadata API
-
-1. Use **VS Code + Salesforce Extension Pack** to deploy the `force-app/` folder.
-2. Deploy **all Apex classes, triggers, platform events, and LWC components**.
-3. Verify that `Job_Application__c` and `JobSearchCompleted__e` are deployed.
 
 ### Step 3 — Verify Setup
 
@@ -140,7 +120,7 @@ Logger.saveLog();
 
 ### Dependency Management: Package Dependencies vs Source Code Inclusion
 
-This project follows **package dependency best practices** for managing third-party dependencies like Nebula Logger and Kevin O'Hara's Trigger Framework, rather than including external source code directly in the repository.
+This project follows package dependency best practices for managing third-party dependencies like Nebula Logger and SFDC Trigger Framework, rather than including external source code directly in the repository.
 
 #### ✅ **Chosen Approach: Package Dependencies**
 
