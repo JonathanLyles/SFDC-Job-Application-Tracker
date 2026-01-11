@@ -360,31 +360,6 @@ describe("Input handlers", () => {
 
   afterEach(cleanupDOM);
 
-  it("Handles keyword input changes without errors", () => {
-    // Arrange
-    const element = createJobSearchElement();
-
-    const inputs = element.shadowRoot.querySelectorAll("lightning-input");
-    const keywordInput = [...inputs].find(
-      (input) => input.label === "Keywords"
-    );
-
-    // Act - Simulate user typing in the input
-    // Test that the component can handle input changes without throwing errors
-    expect(() => {
-      keywordInput.dispatchEvent(
-        new CustomEvent("change", {
-          detail: { value: "test" },
-          bubbles: true
-        })
-      );
-    }).not.toThrow();
-
-    // Assert - Component should still be functional after handling the event
-    expect(keywordInput).toBeDefined();
-    expect(element.shadowRoot.querySelector("lightning-card")).not.toBeNull();
-  });
-
   it("GIVEN the job search form is rendered WHEN the user enters keywords THEN the component updates its state and UI", async () => {
     // ============================================================
     // GIVEN
