@@ -12,7 +12,7 @@
     "test:unit:coverage": "sfdx-lwc-jest --coverage",
     "prettier": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "prettier:verify": "prettier --check \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
-    "prepare": "husky || true",
+    "prepare": "husky install",
     "precommit": "lint-staged"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "**/{aura,lwc}/**/*.js": [
       "eslint"
     ],
-    "**/lwc/**": [
+    "**/lwc/**/*.js": [
       "sfdx-lwc-jest -- --bail --findRelatedTests --passWithNoTests"
     ]
   }
