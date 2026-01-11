@@ -155,6 +155,29 @@
     <!-- Results -->
     <template if:true={hasResults}>
       <div class="slds-p-around_medium">
+        <!-- Action Bar -->
+        <template if:true={hasSelectedJobs}>
+          <div class="slds-m-bottom_medium slds-p-around_small" style="background-color: #f3f3f3; border-radius: 4px;">
+            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+              <div class="slds-col">
+                <span class="slds-text-body_small">
+                  {selectedJobsCount} job(s) selected
+                </span>
+              </div>
+              <div class="slds-col slds-no-flex">
+                <lightning-button
+                  label={createApplicationsButtonLabel}
+                  variant="brand"
+                  onclick={handleCreateApplications}
+                  disabled={isLoading}
+                  icon-name="utility:add"
+                >
+                </lightning-button>
+              </div>
+            </div>
+          </div>
+        </template>
+
         <lightning-datatable
           key-field="id"
           data={pagedJobs}
@@ -162,6 +185,8 @@
           onsort={handleSort}
           sorted-by={sortedBy}
           sorted-direction={sortedDirection}
+          onrowselection={handleRowSelection}
+          max-row-selection="999"
         >
         </lightning-datatable>
 

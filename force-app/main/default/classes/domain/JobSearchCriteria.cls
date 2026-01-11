@@ -24,7 +24,7 @@
  *     buildJoobleRequest(criteria.keywords, criteria.location)
  *
  * CONTROLLER LAYER (JobSearchController):
- *   - Creates criteria from LWC parameters and delegates to service:
+ *   - Creates JobSearchCriteria from LWC parameters and delegates to service:
  *     JobSearchCriteria criteria = new JobSearchCriteria(keywords, location, workTypes);
  *     return jobSearchService.searchJobsAsync(criteria);
  *

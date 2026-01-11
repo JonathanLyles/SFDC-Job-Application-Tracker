@@ -8,9 +8,9 @@
  * ARCHITECTURAL ROLE IN DATA FLOW:
  * -------------------------------
  *
- * ┌─ EXTERNAL APIs ──────┐     ┌─ DOMAIN LAYER ──────┐     ┌─ SALESFORCE ────┐
+ * ┌─ EXTERNAL APIs ──────┐     ┌─ DOMAIN LAYER ──────┐     ┌─ SALESFORCE ─────┐
  * │ Indeed API Response  │────>│                     │────>│ Job_Application  │
- * │ Jooble API Response  │────>│ JobApplicationDomain │────>│ Custom Object    │
+ * │ Jooble API Response  │────>│ JobApplicationDomain│────>│ Custom Object    │
  * │ Future APIs...       │────>│                     │────>│ Standard Fields  │
  * └──────────────────────┘     └─────────────────────┘     └──────────────────┘
  *          │                              │                           │
