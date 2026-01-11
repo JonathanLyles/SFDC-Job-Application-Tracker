@@ -175,19 +175,19 @@ public with sharing class JobSearchController {
       // Queue async search
       String searchId = JobSearchService.searchJobsAsync(criteria);
 
-      Logger.info(
-          'JobSearchController.searchJobs queued async search with searchId: ' +
-          searchId
-        )
-        .setField('SearchId__c', searchId)
-        .setField('Criteria', criteria)
-        .setField('JobBoards', selectedBoards);
-      Logger.saveLog();
+      // Logger.info(
+      //     'JobSearchController.searchJobs queued async search with searchId: ' +
+      //     searchId
+      //   )
+      //   .setField('SearchId__c', searchId)
+      //   .setField('Criteria', criteria)
+      //   .setField('JobBoards', selectedBoards);
+      // Logger.saveLog();
       return searchId;
     } catch (Exception e) {
-      Logger.error('JobSearchController.searchJobs failed: ' + e.getMessage())
-        .setException(e);
-      Logger.saveLog();
+      // Logger.error('JobSearchController.searchJobs failed: ' + e.getMessage())
+      //   .setException(e);
+      // Logger.saveLog();
       throw new AuraHandledException(
         'Failed to queue job search: ' + e.getMessage()
       );
@@ -263,12 +263,12 @@ public with sharing class JobSearchController {
 
       return status;
     } catch (Exception e) {
-      Logger.error(
-          'JobSearchController.getSearchStatus failed: ' + e.getMessage()
-        )
-        .setField('SearchId__c', searchId)
-        .setException(e);
-      Logger.saveLog();
+      // Logger.error(
+      //     'JobSearchController.getSearchStatus failed: ' + e.getMessage()
+      //   )
+      //   .setField('SearchId__c', searchId)
+      //   .setException(e);
+      // Logger.saveLog();
       throw new AuraHandledException(
         'Failed to get search status: ' + e.getMessage()
       );
@@ -502,11 +502,11 @@ public with sharing class JobSearchController {
         ORDER BY Display_Order__c ASC NULLS LAST, MasterLabel ASC
       ];
 
-      for (Job_Board__mdt board : boardMetadata) {
+      for (Job_Board__mdt boardRecord : boardMetadata) {
         Map<String, Object> boardOption = new Map<String, Object>();
-        boardOption.put('label', board.MasterLabel);
-        boardOption.put('value', board.API_Name__c);
-        boardOption.put('description', board.Description__c);
+        boardOption.put('label', boardRecord.MasterLabel);
+        boardOption.put('value', boardRecord.API_Name__c);
+        boardOption.put('description', boardRecord.Description__c);
         jobBoards.add(boardOption);
       }
 
@@ -514,25 +514,32 @@ public with sharing class JobSearchController {
       if (jobBoards.isEmpty()) {
         jobBoards.add(
           new Map<String, Object>{
-            'label' => 'Jooble',
-            'value' => 'jooble',
-            'description' => 'International job search engine'
+            'label' => 'Indeed',
+            'value' => 'Indeed',
+            'description' => 'Popular job search platform'
           }
         );
         jobBoards.add(
           new Map<String, Object>{
-            'label' => 'Indeed',
-            'value' => 'indeed',
-            'description' => 'Popular job search platform'
+            'label' => 'Jooble',
+            'value' => 'Jooble',
+            'description' => 'Global job search engine'
+          }
+        );
+        jobBoards.add(
+          new Map<String, Object>{
+            'label' => 'LinkedIn Jobs',
+            'value' => 'LinkedIn_Jobs',
+            'description' => 'Professional network job listings'
           }
         );
       }
     } catch (Exception e) {
-      Logger.error(
-          'JobSearchController.getAvailableJobBoards failed: ' + e.getMessage()
-        )
-        .setException(e);
-      Logger.saveLog();
+      // Logger.error(
+      //     'JobSearchController.getAvailableJobBoards failed: ' + e.getMessage()
+      //   )
+      //   .setException(e);
+      // Logger.saveLog();
 
       // Return fallback job boards on error
       jobBoards.add(
