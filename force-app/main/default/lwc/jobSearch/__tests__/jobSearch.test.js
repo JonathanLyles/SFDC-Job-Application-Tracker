@@ -3,10 +3,21 @@ import JobSearch from "c/jobSearch";
 
 // Mock the Apex methods
 import searchJobs from "@salesforce/apex/JobSearchController.searchJobs";
+import getAvailableJobBoards from "@salesforce/apex/JobSearchController.getAvailableJobBoards";
 import createJobApplications from "@salesforce/apex/JobSearchController.createJobApplications";
 
 jest.mock(
   "@salesforce/apex/JobSearchController.searchJobs",
+  () => {
+    return {
+      default: jest.fn()
+    };
+  },
+  { virtual: true }
+);
+
+jest.mock(
+  "@salesforce/apex/JobSearchController.getAvailableJobBoards",
   () => {
     return {
       default: jest.fn()
@@ -41,7 +52,50 @@ function cleanupDOM() {
   }
 }
 
+// Global setup for getAvailableJobBoards mock
+beforeEach(() => {
+  // Setup default mock for getAvailableJobBoards
+  getAvailableJobBoards.mockResolvedValue([
+    {
+      label: "Indeed",
+      value: "indeed",
+      description: "Popular job search engine"
+    },
+    {
+      label: "LinkedIn",
+      value: "linkedin",
+      description: "Professional networking platform"
+    },
+    {
+      label: "Jooble",
+      value: "jooble",
+      description: "International job search engine"
+    }
+  ]);
+});
+
 describe("Initial Render", () => {
+  beforeEach(() => {
+    // Setup default mock for getAvailableJobBoards
+    getAvailableJobBoards.mockResolvedValue([
+      {
+        label: "Indeed",
+        value: "indeed",
+        description: "Popular job search engine"
+      },
+      {
+        label: "LinkedIn",
+        value: "linkedin",
+        description: "Professional networking platform"
+      },
+      {
+        label: "Jooble",
+        value: "jooble",
+        description: "International job search engine"
+      }
+    ]);
+  });
+
   afterEach(cleanupDOM);
 
   it('Renders a lightning-card with the title "Job Search"', () => {
@@ -108,6 +162,27 @@ describe("Initial Render", () => {
 });
 
 describe("Conditional UI", () => {
+  beforeEach(() => {
+    // Setup default mock for getAvailableJobBoards
+    getAvailableJobBoards.mockResolvedValue([
+      {
+        label: "Indeed",
+        value: "indeed",
+        description: "Popular job search engine"
+      },
+      {
+        label: "LinkedIn",
+        value: "linkedin",
+        description: "Professional networking platform"
+      },
+      {
+        label: "Jooble",
+        value: "jooble",
+        description: "International job search engine"
+      }
+    ]);
+  });
+
   afterEach(cleanupDOM);
 
   it("Does not render column filters", () => {
@@ -194,8 +269,16 @@ describe("Conditional UI", () => {
 
     const element = createJobSearchElement();
 
-    // Act - Trigger search to make hasResults true
-    const searchButton = element.shadowRoot.querySelector("lightning-button");
+    // Wait for component initialization (job boards loading)
+    await Promise.resolve();
+
+    // Act - Trigger search to make hasResults true using specific "Search Jobs" button
+    const buttons = element.shadowRoot.querySelectorAll("lightning-button");
+    const searchButton = Array.from(buttons).find(
+      (button) => button.label === "Search Jobs"
+    );
+    expect(searchButton).not.toBeNull(); // Ensure we found the right button
+
     searchButton.dispatchEvent(new CustomEvent("click"));
 
     // Wait for async operations and re-render
@@ -220,6 +303,27 @@ describe("Conditional UI", () => {
 });
 
 describe("Error State", () => {
+  beforeEach(() => {
+    // Setup default mock for getAvailableJobBoards
+    getAvailableJobBoards.mockResolvedValue([
+      {
+        label: "Indeed",
+        value: "indeed",
+        description: "Popular job search engine"
+      },
+      {
+        label: "LinkedIn",
+        value: "linkedin",
+        description: "Professional networking platform"
+      },
+      {
+        label: "Jooble",
+        value: "jooble",
+        description: "International job search engine"
+      }
+    ]);
+  });
+
   afterEach(cleanupDOM);
 
   it("Does not render error message on initial load", () => {
@@ -233,6 +337,27 @@ describe("Error State", () => {
 });
 
 describe("Input handlers", () => {
+  beforeEach(() => {
+    // Setup default mock for getAvailableJobBoards
+    getAvailableJobBoards.mockResolvedValue([
+      {
+        label: "Indeed",
+        value: "indeed",
+        description: "Popular job search engine"
+      },
+      {
+        label: "LinkedIn",
+        value: "linkedin",
+        description: "Professional networking platform"
+      },
+      {
+        label: "Jooble",
+        value: "jooble",
+        description: "International job search engine"
+      }
+    ]);
+  });
+
   afterEach(cleanupDOM);
 
   it("Handles keyword input changes without errors", () => {
@@ -422,6 +547,25 @@ describe("Conditional Rendering", () => {
   beforeEach(() => {
     // Clear all mocks before each test
     jest.clearAllMocks();
+
+    // Setup default mock for getAvailableJobBoards
+    getAvailableJobBoards.mockResolvedValue([
+      {
+        label: "Indeed",
+        value: "indeed",
+        description: "Popular job search engine"
+      },
+      {
+        label: "LinkedIn",
+        value: "linkedin",
+        description: "Professional networking platform"
+      },
+      {
+        label: "Jooble",
+        value: "jooble",
+        description: "International job search engine"
+      }
+    ]);
   });
 
   afterEach(cleanupDOM);
@@ -611,6 +755,27 @@ describe("Conditional Rendering", () => {
 });
 
 describe("Multi-Select Functionality", () => {
+  beforeEach(() => {
+    // Setup default mock for getAvailableJobBoards
+    getAvailableJobBoards.mockResolvedValue([
+      {
+        label: "Indeed",
+        value: "indeed",
+        description: "Popular job search engine"
+      },
+      {
+        label: "LinkedIn",
+        value: "linkedin",
+        description: "Professional networking platform"
+      },
+      {
+        label: "Jooble",
+        value: "jooble",
+        description: "International job search engine"
+      }
+    ]);
+  });
+
   afterEach(() => {
     cleanupDOM();
     jest.clearAllMocks();
@@ -745,6 +910,27 @@ describe("Multi-Select Functionality", () => {
 });
 
 describe("Job Application Creation", () => {
+  beforeEach(() => {
+    // Setup default mock for getAvailableJobBoards
+    getAvailableJobBoards.mockResolvedValue([
+      {
+        label: "Indeed",
+        value: "indeed",
+        description: "Popular job search engine"
+      },
+      {
+        label: "LinkedIn",
+        value: "linkedin",
+        description: "Professional networking platform"
+      },
+      {
+        label: "Jooble",
+        value: "jooble",
+        description: "International job search engine"
+      }
+    ]);
+  });
+
   afterEach(() => {
     cleanupDOM();
     jest.clearAllMocks();
@@ -984,6 +1170,27 @@ describe("Job Application Creation", () => {
 });
 
 describe("State Management", () => {
+  beforeEach(() => {
+    // Setup default mock for getAvailableJobBoards
+    getAvailableJobBoards.mockResolvedValue([
+      {
+        label: "Indeed",
+        value: "indeed",
+        description: "Popular job search engine"
+      },
+      {
+        label: "LinkedIn",
+        value: "linkedin",
+        description: "Professional networking platform"
+      },
+      {
+        label: "Jooble",
+        value: "jooble",
+        description: "International job search engine"
+      }
+    ]);
+  });
+
   afterEach(() => {
     cleanupDOM();
     jest.clearAllMocks();
