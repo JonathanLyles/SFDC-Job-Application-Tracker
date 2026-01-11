@@ -114,14 +114,48 @@ describe("Conditional UI", () => {
     // Arrange & Act
     const element = createJobSearchElement();
 
-    // Assert
+    // Assert - Check that column filter UI elements are not present
     const inputs = element.shadowRoot.querySelectorAll("lightning-input");
     const combobox = element.shadowRoot.querySelector("lightning-combobox");
+
+    // Should only have search inputs (Keywords and Location), not filter inputs
+    expect(inputs.length).toBe(2); // Only Keywords and Location inputs
+
+    // Should not have filter combobox
+    expect(combobox).toBeNull();
+
+    // Should not have any filter-specific inputs
+    const titleFilter = element.shadowRoot.querySelector(
+      'lightning-input[label="Filter Title"]'
+    );
+    const salaryFilter = element.shadowRoot.querySelector(
+      'lightning-input[label="Filter Salary"]'
+    );
+    const companyFilter = element.shadowRoot.querySelector(
+      'lightning-input[label="Filter Company"]'
+    );
+
+    expect(titleFilter).toBeNull();
+    expect(salaryFilter).toBeNull();
+    expect(companyFilter).toBeNull();
+  });
+
+  it("Renders initial buttons correctly", () => {
+    // Arrange & Act
+    const element = createJobSearchElement();
+
+    // Assert
     const buttons = element.shadowRoot.querySelectorAll("lightning-button");
 
-    expect(inputs.length).toBe(2); // Only two inputs (Keywords and Location)
-    expect(combobox).toBeNull();
-    expect(buttons.length).toBe(1); // Only one button (Search Jobs)
+    expect(buttons.length).toBe(3); // Three initial buttons
+
+    // Verify the buttons are the expected ones
+    const buttonLabels = Array.from(buttons).map((button) => button.label);
+    expect(buttonLabels).toEqual([
+      "Select All Job Boards",
+      "Clear Job Boards",
+      "Search Jobs"
+    ]);
   });
 
   it("Does not render spinner", () => {
