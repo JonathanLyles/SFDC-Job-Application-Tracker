@@ -153,7 +153,7 @@ public with sharing class JobSearchService {
    *
    * ORCHESTRATION FLOW:
    * ────────────────────
-   * 
+   *
    * JobSearchOrchestratorQueueable.execute():
    *   ├─> if (1 board): → SingleBoardSearchQueueable
    *   └─> if (multiple): → CompositeBoardSearchQueueable
@@ -172,7 +172,7 @@ public with sharing class JobSearchService {
    */
   public static String searchJobsAsync(JobSearchCriteria criteria) {
     // Validate criteria before queuing
-    if (!criteria.isValid()) {
+    if (criteria == null || !criteria.isValid()) {
       throw new InvalidSearchCriteriaException(
         'Search criteria must include keywords or location'
       );
@@ -182,14 +182,18 @@ public with sharing class JobSearchService {
     String searchId = generateSearchId();
 
     // Queue the orchestrator queueable
-    JobSearchOrchestratorQueueable orchestrator = new JobSearchOrchestratorQueueable(searchId, criteria);
+    JobSearchOrchestratorQueueable orchestrator = new JobSearchOrchestratorQueueable(
+      searchId,
+      criteria
+    );
     ID jobId = System.enqueueJob(orchestrator);
 
-    Logger.info('Queued orchestrator job search')
-      .setField('SearchId__c', searchId)
-      .setField('QueueableJobId', jobId)
-      .setField('Criteria', criteria);
-    Logger.saveLog();
+    // TODO: Re-enable when Logger package installed
+    // Logger.info('Queued orchestrator job search')
+    //   .setField('SearchId__c', searchId)
+    //   .setField('QueueableJobId', jobId)
+    //   .setField('Criteria', criteria);
+    // Logger.saveLog();
 
     return searchId;
   }
