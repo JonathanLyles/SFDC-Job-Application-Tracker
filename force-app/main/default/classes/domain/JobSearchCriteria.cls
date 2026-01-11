@@ -6,10 +6,10 @@
  * abstraction for job search criteria that can be used across different layers:
  *
  * UI LAYER (Lightning Web Components):
- *   - jobSearch LWC creates criteria from form inputs:
- *     new JobSearchCriteria(keywords, location, workTypes)
- *   - Validates user input before sending to backend:
- *     if (criteria.isValid()) { callApexMethod(criteria) }
+ *   - jobSearch LWC collects form inputs and delegates to controller:
+ *     callApexMethod(keywords, location, workTypes)
+ *   - Validates basic input before sending to backend:
+ *     if (keywords || location) { callApexMethod(keywords, location, workTypes) }
  *
  * SERVICE LAYER (JobSearchService):
  *   - Receives criteria from controller and coordinates multi-board search:
