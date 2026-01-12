@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Prettier check
         run: npx prettier --check "**/*.{js,json,md,html,css}" || echo "⚠️  Formatting issues found - run 'npm run prettier' to fix"
-        
+
       - name: Run Jest tests
         run: npm run test:unit:ci
 
@@ -105,12 +105,16 @@ jobs:
         run: npm ci
 
       - name: Run ESLint with error reporting
-      run: npm run lint:ci || echo "⚠️  ESLint issues found - run 'npm run lint' to check"
-      
-    - name: Run Prettier check with error reporting
-      run: npm run format:check || echo "⚠️  Format issues found - run 'npm run prettier' to fix"
+        run: npm run lint:ci || echo "⚠️  ESLint issues found - run 'npm run lint' to check"
+
+      - name: Run Prettier check with error reporting
+        run: npm run format:check || echo "⚠️  Format issues found - run 'npm run prettier' to fix"
+
       - name: Check for security vulnerabilities
         run: npm audit --audit-level=moderate
+
+      - name: Run dependency check
+        run: npm outdated || true
 
       - name: Run dependency check
         run: npm outdated || true
