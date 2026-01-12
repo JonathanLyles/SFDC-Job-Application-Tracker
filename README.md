@@ -71,8 +71,8 @@ Option A — Deploy via Salesforce CLI
 
 ```bash
 # Clone the repo
-git clone https://github.com/JonathanLyles/SFDC-Job-Application-Tracker.git
-cd SFDC-Job-Application-Tracker
+git clone https://github.com/<username>/job-application-tracker.git
+cd job-application-tracker
 
 # Authorize your target org
 sfdx auth:web:login -a MyOrgAlias
@@ -102,115 +102,6 @@ Option B — Deploy via Change Set or Metadata API
 - Observe results appear incrementally via Platform Events.
 - Check debug logs in Nebula Logger to confirm logging and progress events.
 
-## Development & Testing
-
-### Local Development Setup
-
-```bash
-# Install dependencies
-npm install
-
-# Run tests
-npm run test:unit
-
-# Run tests with coverage
-npm run test:unit:coverage
-
-# Run linting
-npm run lint
-
-# Format code
-npm run prettier
-```
-
-### CI/CD Pipeline
-
-This project includes a comprehensive CI/CD pipeline that automatically:
-
-- ✅ **Runs Jest tests** on Node.js 18.x and 20.x
-- ✅ **Validates code quality** with ESLint
-- ✅ **Checks formatting** with Prettier
-- ✅ **Scans for vulnerabilities** with npm audit
-- ✅ **Validates Salesforce metadata** syntax
-
-#### Pre-commit Protection
-
-Local commits are protected by Husky pre-commit hooks that automatically:
-
-- Format code with Prettier
-- Run ESLint validation
-- Execute Jest tests for changed LWC files
-
-#### GitHub Actions
-
-The GitHub Actions workflow runs on every push and pull request:
-
-- `ci.yml` - Runs all tests and quality checks
-- Requires all status checks to pass before merging
-- Generates test coverage reports
-- Posts coverage summaries on pull requests
-
-#### Branch Protection
-
-The `main` branch is protected with:
-
-- Required pull request reviews
-- Required status checks from CI pipeline
-- CODEOWNERS enforcement for critical files
-- No force pushes or deletions allowed
-
-### Setting Up CI/CD Protection
-
-#### 1. Local Pre-commit Hooks (Already Configured)
-
-Pre-commit hooks are automatically installed with `npm install` via Husky.
-
-#### 2. GitHub Branch Protection
-
-Run the setup script to configure branch protection rules:
-
-**Windows (PowerShell):**
-
-```powershell
-.\.github\scripts\setup-branch-protection.ps1
-```
-
-**Unix/Linux/Mac:**
-
-```bash
-chmod +x .github/scripts/setup-branch-protection.sh
-./.github/scripts/setup-branch-protection.sh
-```
-
-**Manual Setup:**
-
-1. Go to your repository on GitHub
-2. Click **Settings** → **Branches**
-3. Add a rule for the `main` branch with these settings:
-   - ☑️ Require a pull request before merging
-   - ☑️ Require approvals (1)
-   - ☑️ Dismiss stale reviews
-   - ☑️ Require review from CODEOWNERS
-   - ☑️ Require status checks to pass before merging
-   - ☑️ Require branches to be up to date before merging
-   - Required status checks:
-     - `Run Tests (18.x)`
-     - `Run Tests (20.x)`
-     - `Code Quality Checks`
-
-#### 3. Verify Protection
-
-Test the protection by:
-
-1. Creating a branch with failing tests
-2. Opening a pull request
-3. Confirming that status checks prevent merging
-4. Fixing the tests and verifying the PR can then be merged
-
-### Contributing Guidelines
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development guidelines, testing requirements, and code quality standards.
-
 ## Configuration
 
 _Configuration options will be documented here in the future, including environment settings, feature toggles, and any optional parameters needed for advanced usage._
@@ -222,6 +113,29 @@ _This section will describe known limitations, assumptions about user behavior, 
 ## Roadmap
 
 _A high-level roadmap for upcoming features, improvements, and planned integrations will be outlined here. This will provide transparency on project direction and priorities._
+
+## CI/CD Pipeline
+
+This repository includes a **GitHub Actions–based CI/CD pipeline** designed to promote code quality, reliability, and safe collaboration.
+
+The pipeline runs automatically on every push and pull request targeting the default branch and performs the following checks:
+
+- **Automated testing**
+  Jest unit tests are executed against **Node.js 18.x and 20.x**. All test jobs are **required to pass before changes can be merged**.
+
+- **Code quality visibility**
+  ESLint and Prettier checks are executed as part of the pipeline to surface linting and formatting issues early in the review process.
+
+- **Test coverage reporting**
+  Coverage reports are generated and uploaded as build artifacts, with summarized results posted directly on pull requests.
+
+- **Salesforce metadata validation**
+  Pull requests trigger a Salesforce CLI validation dry-run to verify metadata structure and deployment readiness without impacting org state.
+
+- **Dependency and security awareness**
+  Dependency audits and outdated package checks are performed to highlight potential vulnerabilities and maintenance risks.
+
+Branch protection rules ensure that required CI checks complete successfully before pull requests can be merged, reinforcing a consistent and reliable integration workflow.
 
 ## Contributing
 
