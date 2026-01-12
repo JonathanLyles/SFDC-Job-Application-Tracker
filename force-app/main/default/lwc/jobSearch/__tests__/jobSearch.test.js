@@ -1129,16 +1129,9 @@ describe("Job Application Creation", () => {
     // Verify loading is happening (API call was made)
     expect(createJobApplications).toHaveBeenCalledTimes(1);
 
-    // Check if loading spinner appears (indicating loading state is active)
-    const loadingSpinner =
-      element.shadowRoot.querySelector("lightning-spinner");
-    if (loadingSpinner) {
-      // If spinner exists, we're in loading state
-      expect(loadingSpinner).not.toBeNull();
-    }
-
-    // During loading, the action bar behavior depends on component's internal logic
-    // The important thing is that the operation is happening and loading state is managed
+    // The loading spinner may or may not be visible due to timing
+    // The important assertion is that the API call was made
+    // This test validates the method invocation and general loading behavior
 
     // Clean up - resolve the operation
     resolvePromise(["APP001"]);

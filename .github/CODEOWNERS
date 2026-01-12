@@ -1,0 +1,28 @@
+# CODEOWNERS file for Job Application Tracker
+# This file defines who must review changes to specific parts of the codebase
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global default owners for all files
+* @jonathan-trevino
+
+# Lightning Web Components require extra review
+force-app/main/default/lwc/ @jonathan-trevino
+force-app/test/default/classes/ @jonathan-trevino
+
+# Critical configuration files
+package.json @jonathan-trevino
+jest.config.js @jonathan-trevino
+eslint.config.js @jonathan-trevino
+.github/ @jonathan-trevino
+
+# Metadata and permissions
+force-app/main/default/permissionsets/ @jonathan-trevino
+force-app/main/default/objects/ @jonathan-trevino
+
+# CI/CD and automation
+.github/workflows/ @jonathan-trevino
+.husky/ @jonathan-trevino
+scripts/ @jonathan-trevino
+
+# Documentation
+*.md @jonathan-trevino
